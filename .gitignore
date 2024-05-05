@@ -32,4 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
+# This ignores the specific file in the speicified path
 src/main/resources/application.secrets
