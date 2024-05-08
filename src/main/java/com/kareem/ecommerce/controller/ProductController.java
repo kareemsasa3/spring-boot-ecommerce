@@ -6,7 +6,6 @@ import com.kareem.ecommerce.service.CategoryService;
 import com.kareem.ecommerce.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,47 +39,34 @@ public class ProductController {
         }
     }
 
+    /**
+     * Endpoint to add a new product.
+     * @param product The product details from the request body.
+     * @param categoryId The ID of the category to which the product belongs.
+     * @param image Optional image file for the product.
+     * @return The created product, or an error response.
+     */
     @PostMapping
     public ResponseEntity<Product> addProduct(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("price") Double price,
-            @RequestParam("categoryId") Long categoryId, // New parameter for category ID
-            @RequestBody MultipartFile image // Image file for product
+            @RequestBody Product product, // Product details from the request body
+            @RequestParam("categoryId") Long categoryId, // Category ID from the request param
+            @RequestParam(value = "image", required = false) MultipartFile image // Optional image
     ) {
         try {
-            // Find the specified category
             Category category = categoryService.findCategoryById(categoryId);
             if (category == null) {
-                return ResponseEntity.badRequest().body(null); // Category not found
+                logger.warn("Category with ID {} not found", categoryId);
+                return ResponseEntity.badRequest().body(null); // Return bad request if category not found
             }
 
-            // Create a new product and set its attributes
-            Product newProduct = new Product(name, description, price);
-            newProduct.setCategory(category); // Associate the product with the category
+            product.setCategory(category); // Associate the product with the category
 
-            // Add the product to the service, with image processing
-            Product createdProduct = productService.addProduct(newProduct, image);
+            Product createdProduct = productService.addProduct(product, image); // Add the product with image
 
             return ResponseEntity.ok(createdProduct); // Return the created product
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build(); // Internal server error
-        }
-    }
-
-    @PutMapping
-    public ResponseEntity<Product> updateImageById(@RequestParam("id") Long id, @RequestBody MultipartFile image) {
-        try {
-            Product updatedProduct = productService.updateImageById(id, image);
-            if (updatedProduct != null) {
-                return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            logger.error("Error adding product with image: ", e);
+            return ResponseEntity.status(500).build(); // Internal server error on exception
         }
     }
 
