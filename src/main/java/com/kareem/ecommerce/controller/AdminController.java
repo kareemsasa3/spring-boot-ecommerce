@@ -2,7 +2,6 @@ package com.kareem.ecommerce.controller;
 
 import com.kareem.ecommerce.model.Product;
 import com.kareem.ecommerce.service.ProductService;
-import com.kareem.ecommerce.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,10 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private final ProductService productService;
-    private final UserService userService;
 
     @Autowired
-    public AdminController(ProductService productService, UserService userService) {
+    public AdminController(ProductService productService) {
         this.productService = productService;
-        this.userService = userService;
     }
 
     /**
