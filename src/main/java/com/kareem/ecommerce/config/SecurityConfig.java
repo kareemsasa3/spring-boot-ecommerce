@@ -26,7 +26,9 @@ public class SecurityConfig {
                             "/api/categories/**",
                             "/api/users/",
                             "/api/users/**",
-                            "/api/auth/**"
+                            "/api/auth/**",
+                            "/api/fandoms/",
+                            "/api/fandoms/**"
                             ).permitAll(); // Public access
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");  // Admin-only access
                     auth.anyRequest().authenticated(); // All other requests require authentication

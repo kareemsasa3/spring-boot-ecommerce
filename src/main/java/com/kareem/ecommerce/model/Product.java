@@ -16,28 +16,26 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String imageUrl;
+    @Column(nullable = false)
+    private double price;
 
     @Column
     private String description;
 
-    @Column(nullable = false)
-    private double price;
+    @Column
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonBackReference
     private Category category;
 
-    public Product(String name, String description, double price) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
+    @ManyToOne
+    @JoinColumn(name = "fandom_id")
+    @JsonBackReference
+    private Fandom fandom;
 
     public Product() {
 
     }
-
 }
