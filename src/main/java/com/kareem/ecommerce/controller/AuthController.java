@@ -1,18 +1,15 @@
 package com.kareem.ecommerce.controller;
 
-import com.kareem.ecommerce.model.dto.LoginDTO;
+import com.kareem.ecommerce.model.dto.LoginRequestDTO;
+import com.kareem.ecommerce.model.dto.LoginResponseDTO;
 import com.kareem.ecommerce.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
     private final AuthService authService;
 
@@ -21,11 +18,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            Map<String, Object> loginResult = authService.login(loginDTO.getEmail(), loginDTO.getPassword());
+            LoginResponseDTO loginResponseDTO = authService.login(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
-            return ResponseEntity.ok(loginResult); // Return the token and user data
+            return ResponseEntity.ok(loginResponseDTO); // Return the token and user data
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }

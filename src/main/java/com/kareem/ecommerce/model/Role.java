@@ -20,5 +20,13 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     @JsonBackReference
     private Set<User> users;
+
+    public void addUser(User user) {
+        users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+    }
 }
 

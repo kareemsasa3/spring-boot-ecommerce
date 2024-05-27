@@ -20,15 +20,7 @@ public class SecurityConfig {
                     auth.requestMatchers(
                             "/",
                             "/public/**",
-                            "/api/products",
-                            "/api/products/**",
-                            "/api/categories",
-                            "/api/categories/**",
-                            "/api/users/",
-                            "/api/users/**",
-                            "/api/auth/**",
-                            "/api/fandoms/",
-                            "/api/fandoms/**"
+                            "/api/**"
                             ).permitAll(); // Public access
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");  // Admin-only access
                     auth.anyRequest().authenticated(); // All other requests require authentication
