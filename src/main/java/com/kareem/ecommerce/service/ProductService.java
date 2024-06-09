@@ -3,8 +3,11 @@ package com.kareem.ecommerce.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.kareem.ecommerce.model.Category;
+import com.kareem.ecommerce.model.Fandom;
 import com.kareem.ecommerce.model.Product;
+import com.kareem.ecommerce.model.dto.ProductDTO;
 import com.kareem.ecommerce.repository.CategoryRepository;
+import com.kareem.ecommerce.repository.FandomRepository;
 import com.kareem.ecommerce.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +19,22 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final Cloudinary cloudinary;
     private final CategoryRepository categoryRepository;
+    private final FandomRepository fandomRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
-    public ProductService(ProductRepository productRepository, Cloudinary cloudinary, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, Cloudinary cloudinary, CategoryRepository categoryRepository, FandomRepository fandomRepository) {
         this.productRepository = productRepository;
         this.cloudinary = cloudinary;
         this.categoryRepository = categoryRepository;
+        this.fandomRepository = fandomRepository;
     }
 
     /**
@@ -77,13 +83,30 @@ public class ProductService {
      * Retrieves all products from the repository.
      * @return A list of all products.
      */
-    public List<Product> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         try {
-            return productRepository.findAll();
+            List<Product> products = productRepository.findAll();
+            return products.stream().map(this::convertToDTO).collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("Error fetching all products", e);
             throw new RuntimeException("Error fetching all products", e);
         }
+    }
+
+    private ProductDTO convertToDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
+        dto.setImageUrl(product.getImageUrl());
+        if (product.getCategory() != null) {
+            dto.setCategoryId(product.getCategory().getId());
+        }
+        if (product.getFandom() != null) {
+            dto.setFandomId(product.getFandom().getId());
+        }
+        return dto;
     }
 
     /**
@@ -134,5 +157,40 @@ public class ProductService {
      */
     public List<Product> findProductsByCategoryId(Long categoryId) {
         return productRepository.findByCategoryId(categoryId);
+    }
+
+    public List<Product> searchProducts(String query) {
+        return productRepository.searchByNameOrDescription(query);
+    }
+
+    public Optional<Product> updateProduct(Long id, ProductDTO productDTO) {
+        logger.info(String.valueOf(productDTO));
+        return productRepository.findById(id).map(product -> {
+            product.setName(productDTO.getName());
+            product.setPrice(productDTO.getPrice());
+            product.setDescription(productDTO.getDescription());
+            product.setImageUrl(productDTO.getImageUrl());
+
+            if (productDTO.getCategoryId() != null) {
+                try {
+                    Optional<Category> category = categoryRepository.findById(productDTO.getCategoryId());
+                    category.ifPresent(product::setCategory);
+                } catch (NumberFormatException e) {
+                    logger.error("Invalid categoryId format: {}", productDTO.getCategoryId());
+                }
+            }
+
+            if (productDTO.getFandomId() != null) {
+                try {
+                    Optional<Fandom> fandom = fandomRepository.findById(productDTO.getFandomId());
+                    fandom.ifPresent(product::setFandom);
+                } catch (NumberFormatException e) {
+                    logger.error("Invalid fandomId format: {}", productDTO.getFandomId());
+                }
+
+            }
+
+            return productRepository.save(product);
+        });
     }
 }

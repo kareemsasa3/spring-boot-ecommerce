@@ -1,6 +1,7 @@
 package com.kareem.ecommerce.controller;
 
 import com.kareem.ecommerce.model.User;
+import com.kareem.ecommerce.model.dto.AddRoleToUserDTO;
 import com.kareem.ecommerce.model.dto.UserDTO;
 import com.kareem.ecommerce.service.UserService;
 import jakarta.validation.Valid;
@@ -104,5 +105,21 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build(); // Return 200 OK even if user doesn't exist
+    }
+
+    @PostMapping("/addRole")
+    public ResponseEntity<Void> addRoleToUser(@RequestBody AddRoleToUserDTO request) {
+        try {
+            userService.addRoleToUser(request.getUserId(), request.getRoleId());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/check-admin/{id}")
+    public ResponseEntity<Boolean> checkIfUserIsAdmin(@PathVariable Long id) {
+        boolean isAdmin = userService.checkIfUserIsAdmin(id);
+        return ResponseEntity.ok(isAdmin);
     }
 }

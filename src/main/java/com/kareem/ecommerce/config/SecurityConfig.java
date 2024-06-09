@@ -26,12 +26,14 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated(); // All other requests require authentication
                 })
                 .formLogin(form -> {
-                    form.loginPage("/login").permitAll(); // Custom login page
-                    form.defaultSuccessUrl("/", true); // Redirect after successful login
+                    form.loginPage("/login")
+                            .permitAll()
+                            .defaultSuccessUrl("/", true);
                 })
                 .logout(logout -> {
-                    logout.logoutUrl("/logout"); // URL to log out
-                    logout.logoutSuccessUrl("/").permitAll(); // Allow everyone to log out
+                    logout.logoutUrl("/logout")
+                            .logoutSuccessUrl("/")
+                            .permitAll(); // Allow everyone to log out
                 })
                 .csrf(AbstractHttpConfigurer::disable);
 

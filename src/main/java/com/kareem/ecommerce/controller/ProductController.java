@@ -2,8 +2,10 @@ package com.kareem.ecommerce.controller;
 
 import com.kareem.ecommerce.model.Category;
 import com.kareem.ecommerce.model.Product;
+import com.kareem.ecommerce.model.dto.ProductDTO;
 import com.kareem.ecommerce.service.CategoryService;
 import com.kareem.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +32,13 @@ public class ProductController {
 
     @CrossOrigin(origins = "*")
     @GetMapping
-    public List<Product> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         try {
-            return productService.getAllProducts();
+            List<ProductDTO> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
         } catch (Exception e) {
             logger.error("Error fetching products: {}", e.getMessage());
-            throw e; // rethrow the exception to let the Spring handle it
+            throw e;
         }
     }
 
@@ -111,5 +114,18 @@ public class ProductController {
             return ResponseEntity.ok(product.get().getCategory().getId());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String q) {
+        return productService.searchProducts(q);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
+        logger.info("Received request to update product with id: {}", id);
+        System.out.println("Hello");
+        Optional<Product> updatedProduct = productService.updateProduct(id, productDTO);
+        return updatedProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

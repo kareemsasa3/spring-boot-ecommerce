@@ -133,4 +133,19 @@ public class UserService {
             logger.warn("User with ID {} not found for deletion", id);
         }
     }
+
+    public void addRoleToUser(Long userId, Long roleId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Role role = roleRepository.findById(roleId).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+
+        user.addRole(role);
+        userRepository.save(user);
+    }
+
+    public boolean checkIfUserIsAdmin(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ADMIN"));
+    }
 }

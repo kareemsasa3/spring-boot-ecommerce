@@ -2,11 +2,14 @@ package com.kareem.ecommerce.controller;
 
 import com.kareem.ecommerce.model.Address;
 import com.kareem.ecommerce.model.User;
+import com.kareem.ecommerce.model.dto.AddressDTO;
 import com.kareem.ecommerce.service.AddressService;
 import com.kareem.ecommerce.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/addresses")
+@Validated
+@CrossOrigin(origins = "http://localhost:3000")
 public class AddressController {
 
     private final AddressService addressService;
@@ -31,13 +36,34 @@ public class AddressController {
         return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
 
+    @GetMapping("/default-shipping/{userId}")
+    public ResponseEntity<Address> getDefaultShippingAddress(@PathVariable Long userId) {
+        Address defaultShippingAddress = addressService.getDefaultShippingAddress(userId);
+        if (defaultShippingAddress != null) {
+            return ResponseEntity.ok(defaultShippingAddress);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/default-billing/{userId}")
+    public ResponseEntity<Address> getDefaultBillingAddress(@PathVariable Long userId) {
+        Address defaultBillingAddress = addressService.getDefaultBillingAddress(userId);
+        if (defaultBillingAddress != null) {
+            return ResponseEntity.ok(defaultBillingAddress);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/{userId}")
-    public ResponseEntity<Address> createAddressForUser(@PathVariable Long userId, @RequestBody Address address) {
+    public ResponseEntity<Address> createAddressForUser(@PathVariable Long userId, @Valid @RequestBody AddressDTO addressDTO) {
+        System.out.println(addressDTO);
         Optional<User> user = userService.getUserById(userId);
         if (user.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Address createdAddress = addressService.createAddressForUser(address, user.get());
+        Address createdAddress = addressService.createAddressForUser(addressDTO, user.get());
         return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
     }
 }
