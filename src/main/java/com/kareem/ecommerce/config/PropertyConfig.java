@@ -12,8 +12,8 @@ public class PropertyConfig {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
         configurer.setLocations(
-                new ClassPathResource("application.properties"),
-                new ClassPathResource("application.secrets")
+                new ClassPathResource("application.properties")
+        // new ClassPathResource("application.secrets")
         );
         return configurer;
     }
