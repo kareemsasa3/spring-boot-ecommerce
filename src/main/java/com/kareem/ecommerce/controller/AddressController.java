@@ -6,7 +6,6 @@ import com.kareem.ecommerce.model.dto.AddressDTO;
 import com.kareem.ecommerce.service.AddressService;
 import com.kareem.ecommerce.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +23,6 @@ public class AddressController {
     private final AddressService addressService;
     private final UserService userService;
 
-    @Autowired
     public AddressController(AddressService addressService, UserService userService) {
         this.addressService = addressService;
         this.userService = userService;
@@ -57,7 +55,8 @@ public class AddressController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<Address> createAddressForUser(@PathVariable Long userId, @Valid @RequestBody AddressDTO addressDTO) {
+    public ResponseEntity<Address> createAddressForUser(@PathVariable Long userId,
+            @Valid @RequestBody AddressDTO addressDTO) {
         System.out.println(addressDTO);
         Optional<User> user = userService.getUserById(userId);
         if (user.isEmpty()) {

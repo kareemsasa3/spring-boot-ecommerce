@@ -6,7 +6,6 @@ import com.kareem.ecommerce.repository.CategoryRepository;
 import com.kareem.ecommerce.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ public class CategoryService {
 
     private static final String errorMessage = "Category or Product not found (Category ID: {}, Product ID: {})";
 
-    @Autowired
     public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
@@ -30,7 +28,8 @@ public class CategoryService {
 
     /**
      * Creates a new category with the specified name and description.
-     * @param name The name of the category.
+     * 
+     * @param name        The name of the category.
      * @param description A brief description of the category.
      * @return The created category.
      */
@@ -44,6 +43,7 @@ public class CategoryService {
 
     /**
      * Retrieves all categories.
+     * 
      * @return A list of all categories.
      */
     public List<Category> getAllCategories() {
@@ -52,6 +52,7 @@ public class CategoryService {
 
     /**
      * Retrieves a category by its ID.
+     * 
      * @param id The ID of the category to retrieve.
      * @return The category, or null if not found.
      */
@@ -61,6 +62,7 @@ public class CategoryService {
 
     /**
      * Deletes a category by its ID.
+     * 
      * @param id The ID of the category to delete.
      */
     @Transactional
@@ -74,8 +76,9 @@ public class CategoryService {
 
     /**
      * Adds a product to a category.
+     * 
      * @param categoryId The ID of the category.
-     * @param productId The ID of the product.
+     * @param productId  The ID of the product.
      */
     @Transactional
     public void addProductToCategory(Long categoryId, Long productId) {
@@ -104,8 +107,9 @@ public class CategoryService {
 
     /**
      * Removes a product from a category.
+     * 
      * @param categoryId The ID of the category.
-     * @param productId The ID of the product.
+     * @param productId  The ID of the product.
      */
     @Transactional
     public void removeProductFromCategory(Long categoryId, Long productId) {
@@ -134,6 +138,7 @@ public class CategoryService {
 
     /**
      * Finds a category by its ID.
+     * 
      * @param categoryId The ID of the category to find.
      * @return The category, or null if not found.
      */

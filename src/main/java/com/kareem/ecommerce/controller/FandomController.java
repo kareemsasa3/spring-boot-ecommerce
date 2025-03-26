@@ -3,7 +3,6 @@ package com.kareem.ecommerce.controller;
 import com.kareem.ecommerce.model.Fandom;
 import com.kareem.ecommerce.model.dto.FandomDTO;
 import com.kareem.ecommerce.service.FandomService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ public class FandomController {
 
     private final FandomService fandomService;
 
-    @Autowired
     public FandomController(FandomService fandomService) {
         this.fandomService = fandomService;
     }
@@ -69,4 +67,3 @@ public class FandomController {
         return ResponseEntity.noContent().build();
     }
 }
-

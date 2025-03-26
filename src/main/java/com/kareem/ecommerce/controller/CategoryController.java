@@ -2,7 +2,6 @@ package com.kareem.ecommerce.controller;
 
 import com.kareem.ecommerce.model.Category;
 import com.kareem.ecommerce.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,6 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -32,8 +30,7 @@ public class CategoryController {
     @DeleteMapping("/{categoryId}/remove-product/{productId}")
     public ResponseEntity<?> removeProductFromCategory(
             @PathVariable Long categoryId,
-            @PathVariable Long productId
-    ) {
+            @PathVariable Long productId) {
         categoryService.removeProductFromCategory(categoryId, productId);
         return ResponseEntity.ok().build();
     }

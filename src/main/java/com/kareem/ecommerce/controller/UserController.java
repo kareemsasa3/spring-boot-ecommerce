@@ -5,7 +5,6 @@ import com.kareem.ecommerce.model.dto.AddRoleToUserDTO;
 import com.kareem.ecommerce.model.dto.UserDTO;
 import com.kareem.ecommerce.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,20 +16,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     /**
      * Endpoint to retrieve all users.
+     * 
      * @return A list of all users.
      */
     @GetMapping("/")
@@ -40,6 +38,7 @@ public class UserController {
 
     /**
      * Endpoint to retrieve a user by ID.
+     * 
      * @param id The user ID.
      * @return The user, or a 404 status if not found.
      */
@@ -82,7 +81,8 @@ public class UserController {
 
     /**
      * Endpoint to update an existing user.
-     * @param id The ID of the user to update.
+     * 
+     * @param id          The ID of the user to update.
      * @param updatedUser The updated user data.
      * @return The updated user, or a 404 status if not found.
      */
@@ -98,6 +98,7 @@ public class UserController {
 
     /**
      * Endpoint to delete a user by ID (Optional).
+     * 
      * @param id The user ID.
      * @return A 200 OK status if successful, or 404 if the user doesn't exist.
      */

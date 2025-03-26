@@ -7,7 +7,6 @@ import com.kareem.ecommerce.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class FandomService {
     private final FandomRepository fandomRepository;
     private final ProductRepository productRepository;
 
-    @Autowired
     public FandomService(FandomRepository fandomRepository, ProductRepository productRepository) {
         this.fandomRepository = fandomRepository;
         this.productRepository = productRepository;
@@ -57,7 +55,8 @@ public class FandomService {
 
     /**
      * Adds a product to a fandom.
-     * @param fandomId The ID of the fandom.
+     * 
+     * @param fandomId  The ID of the fandom.
      * @param productId The ID of the product.
      */
     @Transactional

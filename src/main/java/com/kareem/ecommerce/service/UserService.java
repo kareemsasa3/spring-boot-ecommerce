@@ -6,7 +6,6 @@ import com.kareem.ecommerce.repository.RoleRepository;
 import com.kareem.ecommerce.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +22,15 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     /**
      * Retrieves all users.
+     * 
      * @return A list of all users.
      */
     public List<User> getAllUsers() {
@@ -39,6 +39,7 @@ public class UserService {
 
     /**
      * Retrieves a user by ID.
+     * 
      * @param id The ID of the user to retrieve.
      * @return An Optional containing the user if found.
      */
@@ -48,7 +49,7 @@ public class UserService {
 
     @Transactional
     public User createNewUser(String firstName, String lastName, String phoneNumber,
-                              String email, String rawUsername, String password) {
+            String email, String rawUsername, String password) {
         // Check for existing users with the same normalized username
         if (userRepository.findByNormalizedUsername(rawUsername.toLowerCase()) != null) {
             throw new IllegalArgumentException("Username is already in use");
@@ -76,7 +77,8 @@ public class UserService {
 
     /**
      * Updates an existing user.
-     * @param userId The ID of the user to update.
+     * 
+     * @param userId             The ID of the user to update.
      * @param updatedUserDetails The updated user data.
      * @return The updated user, or null if the user does not exist.
      */
@@ -123,6 +125,7 @@ public class UserService {
 
     /**
      * Deletes a user by ID.
+     * 
      * @param id The ID of the user to delete.
      */
     @Transactional

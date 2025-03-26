@@ -4,7 +4,6 @@ import com.kareem.ecommerce.model.Product;
 import com.kareem.ecommerce.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +18,20 @@ public class AdminController {
 
     private final ProductService productService;
 
-    @Autowired
     public AdminController(ProductService productService) {
         this.productService = productService;
     }
 
     /**
      * Endpoint to add a new product.
+     * 
      * @param product The product to add.
-     * @param image The image for the product (optional).
+     * @param image   The image for the product (optional).
      * @return A response indicating success or failure.
      */
     @PostMapping("/add-product")
-    public ResponseEntity<Void> addProduct(@RequestBody Product product, @RequestParam(required = false) MultipartFile image) {
+    public ResponseEntity<Void> addProduct(@RequestBody Product product,
+            @RequestParam(required = false) MultipartFile image) {
         try {
             productService.addProduct(product, image);
             return ResponseEntity.ok().build(); // Return success status
@@ -43,13 +43,15 @@ public class AdminController {
 
     /**
      * Endpoint to update an existing product.
-     * @param id The ID of the product to update.
+     * 
+     * @param id             The ID of the product to update.
      * @param updatedProduct The updated product data.
-     * @param image The new image for the product (optional).
+     * @param image          The new image for the product (optional).
      * @return The updated product, or an error response.
      */
     @PutMapping("/update-product/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct, @RequestParam(required = false) MultipartFile image) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct,
+            @RequestParam(required = false) MultipartFile image) {
         try {
             Product product = productService.updateProduct(id, updatedProduct, image);
             if (product == null) {
