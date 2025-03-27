@@ -17,7 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/addresses")
 @Validated
-@CrossOrigin(origins = "https://ecommerce-template.up.railway.app/")
+@CrossOrigin(origins = { "https://ecommerce-template.up.railway.app", "http://localhost:5173" })
 public class AddressController {
 
     private final AddressService addressService;
